@@ -1,0 +1,252 @@
+@charset "UTF-8";
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-Black.woff2') format('woff2');
+}
+
+
+.mainForm {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  left: calc(50vw - 300px);
+}
+
+
+
+:root {
+  --tagHoverColor: #FFFCF2;
+  --textColor:     #D9D9D9;
+  --almostWhite:   #FFFCF2;
+  --lightGray:     #D9D9D9;
+  --darkGray:      #252422;
+  --darkishGray:   #424241;
+  --activeBtnBgCol:#A3B18A;
+  --borderRadiusSmall: 5px;
+  --mainTopOffset: 150px;
+  --globalFontWeight: 400;
+  --panelWidth: 80vw;
+  --panelMarginLeft: 10vw;
+
+}
+
+body {
+  font-family: Inter;
+  font-size: 24px;
+  font-weight: var(--globalFontWeight);
+  background: var(--lightGray);
+  user-select: none;
+  padding-top: 140px;
+}
+
+body .label {
+  font-size: 30px;
+}
+
+body .searchBar {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--darkGray);
+  box-sizing: content-box;
+  padding: 5px 10px;
+  border-radius: var(--borderRadiusSmall);
+  line-height: 45px;
+  width: var(--panelWidth);
+  height: fit-content;
+  margin-left: var(--panelMarginLeft);
+  margin-top: 5px;
+  cursor: pointer;
+  transition: 0.1s all;
+}
+
+body .searchBar .tag {
+  height: 42px;
+  background: var(--almostWhite);
+  margin: 5px;
+  color: var(--darkGray);
+  padding: 0px 15px 3px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+body .searchBar .tag:hover{
+  background: var(--tagHoverColor);
+}
+
+body .searchBar .tag .remove:before {
+  content: '🗙';
+  padding-left: 15px;
+}
+
+body .searchBar .tagInput {
+  outline: none;
+  border: none;
+  padding: 13px;
+  font-size: 24px;
+  color: var(--textColor);
+  background: var(--darkGray);
+}
+
+body .suggestPanel {
+  z-index: 99;
+  position: absolute;
+  background-color: var(--darkGray);
+  width: calc(var(--panelWidth) + 20px);
+  max-height: 400px;
+  margin-left: var(--panelMarginLeft);
+  border-radius: 0px 0px var(--borderRadiusSmall) var(--borderRadiusSmall);
+  border-top: solid 3px;
+  border-color: var(--lightGray);
+  cursor: pointer;
+  transition: 0.1s all;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body .suggestion {
+  padding: 10px;
+  background-color: var(--darkGray);
+  color: var(--textColor);
+}
+body .suggestion:hover {
+  background-color: #424241;
+}
+
+
+body .surnameSearchBar {
+  background: var(--darkGray);
+  box-sizing: content-box;
+  padding: 5px 10px;
+  border-radius: var(--borderRadiusSmall);
+  line-height: 50px;
+  width: 600px;
+  /*margin-left: calc(50vw - 200px);*/
+  margin-top: 5px;
+  cursor: pointer;
+  transition: 0.1s all;
+}
+
+body .surnameSearchBar .nameInput {
+  outline: none;
+  border: none;
+  width: 100%;
+  padding: 13px;
+  font-size: 24px;
+  color: var(--textColor);
+  background: var(--darkGray);
+  user-select: text;
+}
+
+body .searchBtnWrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+body .searchBtn {
+  background-color: var(--darkGray);
+  border-radius: var(--borderRadiusSmall);
+  color: var(--textColor);
+  width: 200px;
+  height: 40px;
+  font-size: 24px;
+  text-align: center;
+  padding-top: 10px;
+}
+
+body .searchBtn:active {
+  width: 196;
+  height: 36px;
+  background-color: var(--activeBtnBgCol);
+  border: solid 2px var(--activeBtnBgCol);
+  box-shadow: inset 8px 9px 10px -10px #000;
+}
+
+.showEmployesBtn{
+  z-index: 0;
+  position: relative;
+  top: -33px;
+  left: 215px;
+  cursor: pointer;
+  font-size: 10px;
+  text-decoration: underline;
+}
+.showEmployesBtn:active{
+  color: red;
+}
+
+body .DBupdBtn {
+  background-color: var(--darkGray);
+  border-radius: var(--borderRadiusSmall);
+  color: var(--textColor);
+  width: 120px;
+  height: 32px;
+  font-size: 18px;
+  text-align: center;
+  padding-top: 10px;
+}
+
+body .DBupdBtn:active {
+  width: 116;
+  height: 28px;
+  background-color: var(--activeBtnBgCol);
+  border: solid 2px var(--activeBtnBgCol);
+  box-shadow: inset 8px 9px 10px -10px #000;
+}
+
+.gDocBtn{
+  z-index: 0;
+  position: relative;
+  top: 12px;
+  left: 24px;
+  cursor: pointer;
+  font-size: 10px;
+  text-decoration: underline;
+}
+.gDocBtn:active{
+  color: red;
+}
+
+
+
+.alarma {
+  overflow: auto;
+  text-align: center;
+  width: 70%;
+  left: 15%;
+  position: absolute;
+  top: 0px;
+}
+.fade-out-text {
+  opacity:           0;
+  font-size:         25px;
+  animation:         fadeOut 2s;
+  -webkit-animation: fadeOut 2s;
+  -moz-animation:    fadeOut 2s;
+  -o-animation:      fadeOut 2s;
+  -ms-animation:     fadeOut 2s;
+}
+
+@keyframes fadeOut {
+  100% { opacity: 0; }
+  50%  { opacity: 1; }
+  0%   { opacity: 1; }
+}
+@-moz-keyframes fadeOut {
+  100% { opacity: 0; }
+  0%   { opacity: 1; }
+}
+@-webkit-keyframes fadeOut {
+  100% { opacity: 0; }
+  50%  { opacity: 1; }
+  0%   { opacity: 1; }
+}
+@-o-keyframes fadeOut {
+  100% { opacity: 0; }
+  0%   { opacity: 1; }
+}
+@-ms-keyframes fadeOut {
+  100% { opacity: 0; }
+  0%   { opacity: 1; }
+}
