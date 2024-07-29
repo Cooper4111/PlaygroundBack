@@ -37,6 +37,7 @@ const mongodb_1 = require("mongodb");
 const settings_1 = require("./settings");
 const typedef_1 = require("./typedef");
 const bcrypt = __importStar(require("bcrypt"));
+const nanoid_1 = require("nanoid");
 class DBController {
     constructor() {
         console.log('Creating new DB instance...');
@@ -82,11 +83,31 @@ class DBController {
             // does user exists? Yes. Here.
             // is data correct? Nope. Outside.
             try {
+                user.avatarID = (0, nanoid_1.nanoid)();
                 const res = yield this.userCollection.insertOne(user);
                 return { ok: res.acknowledged ? 1 : 0, data: { uid: res.insertedId, pwd: user.password } };
             }
             catch (e) {
                 return { ok: 0, error: { desc: `Error registering user: ${user.email} ${user.password}`, meta: e } };
+            }
+        });
+    }
+    updateUser(user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const setFields = {};
+                if (user.password)
+                    setFields.password = user.password;
+                if (user.fname)
+                    setFields.fname = user.fname;
+                if (user.lname)
+                    setFields.lname = user.lname;
+                console.log(`updating ${user.email}`);
+                const res = yield this.userCollection.updateOne({ email: user.email }, { $set: setFields });
+                return { ok: res.acknowledged ? 1 : 0, data: res };
+            }
+            catch (e) {
+                return { ok: 0, error: { desc: `Error updating user: ${user.email}`, meta: e } };
             }
         });
     }
@@ -105,11 +126,11 @@ class DBController {
                 .then(res => {
                 console.log('res: ' + res);
                 if (res)
-                    return { ok: 1, data: userRes.data };
+                    return { ok: 1, data: userAtDB };
                 else
-                    return { ok: 0, error: 'Wrong login/password' };
+                    return { ok: 0, error: { desc: 'Wrong login/password' } };
             })
-                .catch(err => { return { ok: 0, error: err }; });
+                .catch(err => { return { ok: 0, error: { desc: 'bcrypt compare() error', meta: err } }; });
         });
     }
 }

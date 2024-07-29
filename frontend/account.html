@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title>XPart: auth</title>
+        <title>XPart: myAccount</title>
         <link rel="stylesheet" href="menu.css">
-        <link rel="stylesheet" href="auth.css">
+        <link rel="stylesheet" href="account.css">
         <link rel="stylesheet" href="fonts/inter.css">
         <script type="text/javascript" src="jquery-3.6.0.js" defer></script>
         <script type="text/javascript" src="tools.js" defer></script>
         <script type="text/javascript" src="api.js" defer></script>
-        <script type="text/javascript" src="auth.js" defer></script>
+        <script type="text/javascript" src="account.js" defer></script>
         <script type="text/javascript" src="menu.js" defer></script>
     </head>
     <body>
@@ -22,7 +22,13 @@
                 <div class="menubtn">Logout</div>
             </div>
         </div>
-
+        <div class="cvFrameWrapper">
+            <div class="btnAWrapper" style="position: relative; top: 100px;">
+                <div style="width: 200px">
+                    <div class="btnA">Edit</div>
+                </div>
+            </div>
+        </div>
         <div class="mainForm" >
             <div class="register label">Name:</div>
             <div class="registerFieldWrapper">
@@ -33,10 +39,6 @@
                     <input class="nameInput" type="text" autocomplete="off" placeholder="Last name" size="1" id="lnameInput">
                 </div>
             </div>
-            <div class="label">Email:</div>
-            <div class="inputField">
-                <input class="nameInput" type="text" autocomplete="off" placeholder="" size="1" id="emailInput">
-            </div>
             <div class="label">Password:</div>
             <div class="inputField">
                 <input class="nameInput" type="password" autocomplete="off" placeholder="" size="1" id="passwordInput">
@@ -44,29 +46,6 @@
             <div class="register label">Repeat password:</div>
             <div class="register inputField">
                 <input class="nameInput" type="password" autocomplete="off" placeholder="" size="1" id="passwordConfirm">
-            </div>
-            <div class="register">
-                <div class="registerFieldWrapper">
-                    <div class="label">Date of birth:</div>
-                    <div class="label" style="position: relative;left: 206px;">Sex:</div>
-                </div>
-            </div>
-            <div class="register">
-                <div class="registerFieldWrapper">
-                    <div class="inputField halfField" style="height: 100%;">
-                        <input class="nameInput" type="date" autocomplete="off" placeholder="" size="1" id="ageInput">
-                    </div>
-                    <div class="halfField" style="display: flex;align-items: center; gap: 50px;">
-                        <div style="display: flex;align-items: center;">
-                            <input type="radio" value="Male" name="sexInput">
-                            <div class="label">Male</div>
-                        </div>
-                        <div style="display: flex;align-items: center;">
-                            <input type="radio" value="Female" name="sexInput">
-                            <div class="label">Female</div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div class="register">
                 <h1>Upload Avatar</h1>
@@ -80,10 +59,10 @@
 
             <div class="btnAWrapper">
                 <div style="width: 200px">
-                    <div class="btnA">Login!</div>
+                    <div class="btnA">Submit!</div>
                 </div>
                 <div>
-                    <div class="btnB">register</div>
+                    <div class="btnB">back</div>
                 </div>
             </div>
         </div>

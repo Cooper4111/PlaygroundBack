@@ -2,6 +2,7 @@ import { Collection, MongoClient } from 'mongodb';
 import { SETTINGS } from './settings';
 import { ErrCode, opError, opResult, User } from './typedef';
 import * as bcrypt from 'bcrypt';
+import { nanoid } from 'nanoid';
 
 export class DBController
 {
@@ -23,7 +24,7 @@ export class DBController
     async connect(
         URL             = SETTINGS.DFLT_MONGO_URL,
         DBname          = SETTINGS.DFLT_MONGO_DB,
-        collectionName  = SETTINGS.DFLT_MONGO_COLL
+        collectionName  = SETTINGS.DFLT_MONGO_COLLECTION
     ){
         this.mongoClient = new MongoClient(URL);
         this.userCollection = this.mongoClient.db(DBname).collection(collectionName);
@@ -55,16 +56,33 @@ export class DBController
         // does user exists? Yes. Here.
         // is data correct? Nope. Outside.
         try {
+            user.avatarID = nanoid();
             const res = await this.userCollection.insertOne(user);
             return { ok: res.acknowledged ? 1 : 0, data: { uid : res.insertedId, pwd: user.password }  };
         } catch (e) {
             return { ok: 0, error: { desc: `Error registering user: ${user.email} ${user.password}`, meta: e } };
         }
     }
+    async updateUser(user : any) : Promise<opResult<any>> {
+        try {
+            const setFields : any = {};
+            if(user.password) setFields.password = user.password;
+            if(user.fname)    setFields.fname    = user.fname;
+            if(user.lname)    setFields.lname    = user.lname;
+            console.log(`updating ${user.email}`);
+            const res = await this.userCollection.updateOne(
+                { email : user.email },
+                { $set  : setFields }
+            );
+            return { ok: res.acknowledged ? 1 : 0, data: res };
+        } catch (e) {
+            return { ok: 0, error: { desc: `Error updating user: ${user.email}`, meta: e } };
+        }
+    }
 
     async deleteUser(email : string) {}
 
-    async authUser(email : string, password : string) : Promise<any> {
+    async authUser(email : string, password : string) : Promise<opResult<any>> {
         const userRes = await this.getUser(email);
         console.log("userRes:");
         console.log(userRes);
@@ -75,10 +93,10 @@ export class DBController
             .then(  res => { 
                 console.log('res: ' + res);
                 if(res)
-                    return { ok: 1, data: userRes.data } 
+                    return { ok: 1, data: userAtDB } 
                 else
-                    return { ok: 0, error: 'Wrong login/password' } 
+                    return { ok: 0, error: { desc: 'Wrong login/password' } } 
                 })
-            .catch( err => { return { ok: 0, error: err } });
+            .catch( err => { return { ok: 0, error: { desc: 'bcrypt compare() error', meta: err } } });
     }
 }

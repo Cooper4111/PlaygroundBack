@@ -14,8 +14,8 @@ export const SETTINGS = {
     UI_PORT     : 3000,
     API_PORT    : 4000,
     ROOT_URL    : 'http://localhost:3000',
-    PATH_TO_MEDIA   : '',
-    DFLT_MONGO_URL  : 'mongodb://127.0.0.1:27017/',
-    DFLT_MONGO_DB   : 'xpart',
-    DFLT_MONGO_COLL : 'users'
+    PATH_TO_MEDIA           : './frontend/media/img/avatar/',
+    DFLT_MONGO_URL          : 'mongodb://127.0.0.1:27017/',
+    DFLT_MONGO_DB           : 'xpart',
+    DFLT_MONGO_COLLECTION   : 'users'
 }

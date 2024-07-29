@@ -1,0 +1,75 @@
+@charset "UTF-8";
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-Black.woff2') format('woff2');
+}
+
+:root {
+  --tagHoverColor:  #FFFCF2;
+  --textColor:      #D9D9D9;
+  --almostWhite:    #FFFCF2;
+  --lightGray:      #D9D9D9;
+  --darkGray:       #252422;
+  --lessDarkGray:   #383634;
+  --gray:           #646361;
+  --qaCommentColor: #0F73E8;
+  --activeBtnBgCol: #A3B18A;
+  --tableCellColor: #D9D9D9;
+
+  --cvDefaultHeight: 319px;
+  --borderRadiusSmall: 5px;
+  --globalFontWeight: 400;
+  --panelWidth: 80vw;
+  --panelMarginLeft: 10vw;
+  --headContentMargin: 0px;
+
+  --menubtnWidth: fit-content;
+  --menubtnHeight: 100%;
+}
+
+.menubar{
+    position: sticky;
+    height: 50px;
+    width: 100%;
+    top: 0;
+    background-color: var(--darkGray);
+    z-index: 999;
+    justify-content: space-between;
+    display: flex;
+}
+
+.menuOptionWrapper{
+    display: flex;
+    gap: 10px;
+}
+
+.menulabel{
+    padding: 0px 10px 0 10px;
+    display: flex;
+    align-items: center;
+    background-color: var(--darkGray);
+    color: var(--almostWhite);
+    text-align: center;
+    width: var(--menubtnWidth);
+    height: var(--menubtnHeight);
+}
+
+.menubtn{
+    padding: 0px 10px 0 10px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    background-color: var(--darkGray);
+    color: var(--almostWhite);
+    text-align: center;
+    width: var(--menubtnWidth);
+    height: var(--menubtnHeight);
+}
+
+.menubtn:hover{
+    background-color: var(--lessDarkGray);
+}
+
+.menubtn:active{
+    background-color: var(--gray);
+}

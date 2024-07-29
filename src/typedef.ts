@@ -1,9 +1,13 @@
 export interface opResult<T> {
-    ok:  1 | 0,
+    ok:  number | boolean,
     data?: T,
     error?: opError
 }
-
+export interface opError {
+    code? : ErrCode,
+    desc? : string,
+    meta? : any
+}
 export enum ErrCode {
     default = 0,
     defaultDBerr,
@@ -18,19 +22,17 @@ export enum ErrCode {
     InvalidSQL
 }
 
-export interface opError {
-    code? : ErrCode,
-    desc? : string,
-    meta? : any
-}
+
 
 export interface User {
     email     : string,
     password? : string,
-    passHash?  : string,
+    _id       : string,
+    passHash? : string,
     sex?      : string,
     age?      : number,
-    picPath?  : string,
+    dob?      : string,
+    avatarID? : string,
     fname?    : string,
     sname?    : string,
     secret?   : string,

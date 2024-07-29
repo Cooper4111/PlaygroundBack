@@ -1,0 +1,45 @@
+@charset "UTF-8";
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-Black.woff2') format('woff2');
+}
+
+:root {
+  --tagHoverColor: #FFFCF2;
+  --textColor: #D9D9D9;
+  --almostWhite: #FFFCF2;
+  --lightGray: #D9D9D9;
+  --darkGray:  #252422;
+  --qaCommentColor: #0F73E8;
+  --activeBtnBgCol: #A3B18A;
+  --tableCellColor: #D9D9D9;
+
+  --cvDefaultHeight: 319px;
+  --borderRadiusSmall: 5px;
+  --globalFontWeight: 400;
+  --panelWidth: 80vw;
+  --panelMarginLeft: 10vw;
+  --headContentMargin: 0px;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--lightGray);
+  font-family: Inter;
+  font-size: 24px;
+  font-weight: var(--globalFontWeight);
+  user-select: none;
+  margin: 0px;
+}
+
+.alarma {
+  overflow: auto;
+  text-align: center;
+  width: 70%;
+  left: 15%;
+  position: absolute;
+  top: 0px;
+}

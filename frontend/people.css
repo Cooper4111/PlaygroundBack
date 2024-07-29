@@ -1,0 +1,111 @@
+@charset "UTF-8";
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/Inter-Black.woff2') format('woff2');
+}
+
+:root {
+  --tagHoverColor: #FFFCF2;
+  --textColor: #D9D9D9;
+  --almostWhite: #FFFCF2;
+  --lightGray: #D9D9D9;
+  --darkGray:  #252422;
+  --qaCommentColor: #0F73E8;
+  --activeBtnBgCol: #A3B18A;
+  --tableCellColor: #D9D9D9;
+
+  --cvDefaultHeight: 319px;
+  --borderRadiusSmall: 5px;
+  --globalFontWeight: 400;
+  --panelWidth: 80vw;
+  --panelMarginLeft: 10vw;
+  --headContentMargin: 0px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--lightGray);
+    font-family: Inter;
+    font-size: 24px;
+    font-weight: var(--globalFontWeight);
+    user-select: none;
+    margin: 0px;
+}
+
+.mainframe {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    gap: 10px;
+    width: 660px;
+    height: 100%;
+    /*background-color: #fff8d8;*/
+}
+
+.cvFrame {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    padding-bottom: 45px;
+    width: 100%;
+    height: calc(var(--cvDefaultHeight) + 141);
+    background-color: var(--almostWhite);
+    transition: height 1500ms;
+}
+.cvFrameInner {
+    width: 100%;
+    overflow: hidden;
+    max-height: var(--cvDefaultHeight);
+    transition: max-height 400ms;
+}
+
+.cvHead {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background-color: var(--almostWhite);
+}
+.cvName {
+    font-size: 18px;
+    margin: var(--headContentMargin);
+    float: left;
+}
+
+.cvSkillRecord {
+    display: flex;
+    flex-direction: row;
+}
+.cvSkillRecordName {
+    width: 70%;
+}
+.cvSkillRecordVal {
+    display: flex;
+    overflow-wrap: anywhere;
+    max-width: 50%;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+@keyframes unfold {
+    100% { max-height: 'fit-content'; }
+    0%   { max-height: var(--cvDefaultHeight); }
+}
+@-moz-keyframes unfold {
+    100% { max-height: 'fit-content'; }
+    0%   { max-height: var(--cvDefaultHeight); }
+}
+@-webkit-keyframes unfold {
+    100% { max-height: 'fit-content'; }
+    0%   { max-height: var(--cvDefaultHeight); }
+}
+@-o-keyframes unfold {
+    100% { max-height: 'fit-content'; }
+    0%   { max-height: var(--cvDefaultHeight); }
+}
+@-ms-keyframes unfold {
+    100% { max-height: 'fit-content'; }
+    0%   { max-height: var(--cvDefaultHeight); }
+}

@@ -47,11 +47,14 @@ const path = __importStar(require("path"));
 const typedef_1 = require("./typedef");
 const settings_1 = require("./settings");
 const bcrypt = __importStar(require("bcrypt"));
+const multer_1 = __importDefault(require("multer"));
 const DB = db_1.DBController.instance;
 function veryfyUser(request) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log('Cheking JWT');
         const JWT = request.cookies[settings_1.SETTINGS.JWT_NAME];
         console.log(JWT);
+        console.log(request.cookies);
         if (JWT === 'logout')
             return { ok: 0, error: { code: typedef_1.ErrCode.JWT_LOGGED_OUT, desc: 'You have logged out. Please, log in again.' } };
         if (JWT === undefined) {
@@ -60,6 +63,7 @@ function veryfyUser(request) {
         try {
             const JWT_decoded = jsonwebtoken_1.default.verify(JWT, settings_1.SETTINGS.JWT_SECRET);
             console.log("CP_vU_2");
+            console.log(JWT_decoded);
             const user = JWT_decoded.user;
             return { ok: 1, data: user };
         }
@@ -109,7 +113,7 @@ function initUIendpoints(app) {
 }
 function initAPIendpoints(app) {
     app.use((0, cors_1.default)({
-        origin: [settings_1.SETTINGS.ROOT_URL], // Sets Access-Control-Allow-Origin to the UI URI
+        origin: [settings_1.SETTINGS.ROOT_URL, `http://127.0.0.1:${settings_1.SETTINGS.UI_PORT}`], // Sets Access-Control-Allow-Origin to the UI URI
         credentials: true, // Sets Access-Control-Allow-Credentials to true
     }));
     app.use((0, cookie_parser_1.default)());
@@ -119,22 +123,27 @@ function initAPIendpoints(app) {
         var foo = { ok: 1 };
         response.status(200).json(foo);
     }));
+    //================================================================================
+    // +
     app.get('/api/whoami', (request, response) => __awaiter(this, void 0, void 0, function* () {
-        console.log('Cheking JWT');
         const res = yield veryfyUser(request);
         if (!res.ok)
-            return response.status(403).json({ ok: 0, error: res.error });
+            return response.status(403).json(res);
+        console.log(res);
         delete res.data.password;
+        delete res.data._id;
         return response.status(200).json({ ok: 1, data: res.data });
     }));
-    //========================================
+    // +
     app.post('/api/login', (request, response) => __awaiter(this, void 0, void 0, function* () {
         const res = yield DB.authUser(request.body.user.email, request.body.user.password);
         if (res.error)
             return response.status(401).json(res);
         delete res.data.password;
+        console.log('Signing JWT payload...:');
+        console.log(res);
         const JWT = jsonwebtoken_1.default.sign({
-            user: res.data.user,
+            user: res.data,
             exp: Math.floor(Date.now() + settings_1.SETTINGS.JWT_MAX_AGE) / 1000 // JWT requires seconds!
         }, settings_1.SETTINGS.JWT_SECRET);
         response.cookie(settings_1.SETTINGS.JWT_NAME, JWT, {
@@ -144,6 +153,7 @@ function initAPIendpoints(app) {
         });
         return response.status(200).json({ ok: 1 });
     }));
+    // +
     app.get('/api/logout', (request, response) => __awaiter(this, void 0, void 0, function* () {
         response.cookie(settings_1.SETTINGS.JWT_NAME, 'logout', {
             maxAge: settings_1.SETTINGS.JWT_MAX_AGE,
@@ -152,6 +162,7 @@ function initAPIendpoints(app) {
         });
         return response.status(200).json({ ok: 1, data: 'Logout successfully.' });
     }));
+    // +
     app.post('/api/user/create', (request, response) => __awaiter(this, void 0, void 0, function* () {
         console.log('Register EP fired');
         const user = request.body.user;
@@ -160,83 +171,87 @@ function initAPIendpoints(app) {
             return response.status(400).json({ ok: 0, error: `User with email ${user.email} exists` });
         if (resGetUser.error.code == typedef_1.ErrCode.defaultDBerr)
             return response.status(400).json(resGetUser);
-        // check user for correctness
+        // TODO check user's fields for correctness
         user.password = yield bcrypt.hash(user.password, settings_1.SETTINGS.SALT_ROUNDS);
         return response.status(200).json(yield DB.createUser(user));
     }));
-    app.get('/api/user/list', (request, response) => __awaiter(this, void 0, void 0, function* () {
-        console.log('Cheking JWT');
+    app.post('/api/user/update', (request, response) => __awaiter(this, void 0, void 0, function* () {
+        console.log('Edit EP fired');
         const resVerify = yield veryfyUser(request);
         if (!resVerify.ok)
-            return response.status(403).json({ ok: 0, error: resVerify.error });
-        return response.status(200).json(yield DB.listUsers());
+            return response.status(403).json(resVerify);
+        const user = resVerify.data;
+        const updateData = request.body.user;
+        console.log(user);
+        console.log(updateData);
+        const resCheckUser = yield DB.getUser(user.email);
+        if (!resCheckUser.ok)
+            return response.status(resCheckUser.error.code == typedef_1.ErrCode.userMissing ? 401 : 500).json(resCheckUser);
+        for (const field in updateData)
+            if (!updateData[field])
+                delete updateData[field];
+        console.log('================');
+        console.log(updateData);
+        // TODO check user's fields for correctness
+        updateData.email = user.email;
+        if (updateData.password)
+            updateData.password = yield bcrypt.hash(updateData.password, settings_1.SETTINGS.SALT_ROUNDS);
+        return response.status(200).json(yield DB.updateUser(updateData));
     }));
-    // CRUD
-    // app.post('/api/user/get', async (request, response) => { // (email) : User
-    //     try{
-    //         const authRes = await veryfyUser(request, Role.manager); // access for manager+ only
-    //         if(!authRes.ok)
-    //             return response.status(403).json(authRes);
-    //         const res = await DB.getUser(request.body.email, true);
-    //         if(!res.ok)
-    //             return response.status(500).json(res);
-    //         const user : User = res.data;
-    //         if(Role[authRes.data.role] !== Role.admin &&
-    //                         user.company !== authRes.data.company)
-    //             return response.status(403).json({ ok: 0, error: 'Forbidden.'});
-    //         return response.status(200).json(user);
-    //     }
-    //     catch(e){
-    //         return response.status(500).json({ ok: 0, error: { desc: 'Something went wrong.', meta: e}});
-    //     }
-    // });
-    // app.post('/api/user/list', async (request, response) => { // ({role, company}) : [User]
-    //     try{
-    //         // reqWhitelist()  or even app.use(...)?
-    //         const reqComp = request.body.company;
-    //         const reqRole = request.body.role;
-    //         const authRes = await veryfyUser(request, Role.manager);
-    //         if(!authRes.ok)
-    //             return response.status(403).json(authRes);
-    //         const user    = authRes.data;
-    //         const isAdmin = Role[user.role] === Role.admin;
-    //         if(!isAdmin && reqComp !== user.company)
-    //             return response.status(403).json({ ok: 0, error: { desc: `You have no access to company ${request.body.company}; Your current accecible companies: ${authRes.data.company}` }});
-    //         if(reqRole && !reqComp && !isAdmin)
-    //             return response.status(403).json({ ok: 0, error: { desc: `You are not authorized to list ALL users.` }});
-    //         const uList = await DB.listUser(reqComp, reqRole);
-    //         return response.status(200).json(uList);
-    //     }
-    //     catch(e){
-    //         return response.status(500).json({ ok: 0, error: { desc: 'Something went wrong.', meta: e}});
-    //     }
-    // });
-    // app.post('/api/user/delete', async (request, response) => {
-    //     console.log('Delete EP fired');
-    //     const authRes = await veryfyUser(request, Role.manager);
-    //     if(!authRes.ok)
-    //         return response.status(403).json(authRes);
-    //     console.log('Delete EP: veryfied.');
-    //     const findRes = await DB.getUser(request.body.email, true);
-    //     if(!findRes.ok)
-    //         return response.status(403).json(findRes);
-    //     console.log('Delete EP: target found.');
-    //     const reqUser = authRes.data;
-    //     const delUser = findRes.data;
-    //     if(Role[reqUser.role] <= Role[delUser.role] ||
-    //         (Role[reqUser.role] != Role.admin && reqUser.company !== delUser.company))
-    //         return response.status(403).json({ ok: 0, error: 'You have not enough privileges to delete this user.'});
-    //     console.log('Delete EP: target accepted.');
-    //     const delRes = await DB.deleteUser(delUser.email);
-    //     return response.status(delRes.ok? 200 : 500).json(delRes);
-    // });
-    // //TODO
-    // app.post('/api/user/update', async (request, response) => {
-    //     const authRes = await veryfyUser(request, Role.manager);
-    //     if(!authRes.ok)
-    //         return response.status(403).json(authRes);
-    //     const user : User = request.body.user;
-    // });
+    // +
+    app.get('/api/user/list', (request, response) => __awaiter(this, void 0, void 0, function* () {
+        const resVerify = yield veryfyUser(request);
+        if (!resVerify.ok)
+            return response.status(403).json(resVerify);
+        const resList = yield DB.listUsers();
+        if (!resList.ok)
+            return response.status(403).json(resList);
+        resList.data.map(record => {
+            delete record._id;
+            delete record.password;
+        });
+        return response.status(200).json(resList);
+    }));
+    app.post('/api/upload', (request, response) => __awaiter(this, void 0, void 0, function* () {
+        const resVerify = yield veryfyUser(request);
+        if (!resVerify.ok)
+            return response.status(403).json(resVerify);
+        request.avatarID = resVerify.data.avatarID;
+        upload(request, response, (err) => {
+            if (err)
+                response.status(400).json({ message: err });
+            else if (request.file == undefined)
+                response.status(400).json({ message: 'No file selected' });
+            else
+                response.status(200).json({
+                    message: 'File uploaded successfully',
+                    file: `uploads/${request.file.filename}`
+                });
+        });
+    }));
     return app;
+}
+//=========== UPLOAD =============
+const storage = multer_1.default.diskStorage({
+    destination: settings_1.SETTINGS.PATH_TO_MEDIA,
+    filename: function (req, file, callback) {
+        callback(null, (req === null || req === void 0 ? void 0 : req.avatarID) + path.extname(file.originalname)); // callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = (0, multer_1.default)({
+    storage: storage,
+    limits: { fileSize: 1000000 }, // Limit file size to 1MB
+    fileFilter: function (req, file, callback) {
+        checkFileType(file, callback);
+    }
+}).single('avatar');
+function checkFileType(file, callback) {
+    const filetypes = /jpeg|jpg|png/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+    if (mimetype && extname)
+        return callback(null, true);
+    else
+        callback('Error: Images Only!');
 }
 //# sourceMappingURL=endpoints.js.map

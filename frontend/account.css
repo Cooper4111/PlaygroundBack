@@ -7,7 +7,7 @@
 
 .mainForm {
   position: absolute;
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   left: calc(50vw - 300px);
@@ -144,7 +144,7 @@ body .btnB:active {
   width: 70%;
   left: 15%;
   position: absolute;
-  top: 100px;
+  top: 70px;
 }
 .fade-out-text {
   opacity:           0;
@@ -180,9 +180,43 @@ body .btnB:active {
 }
 
 .register{
-  display: none;
+
 }
 
 .halfField{
   width: 290px !important; 
+}
+
+.cvFrame {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    padding-bottom: 45px;
+    height: calc(var(--cvDefaultHeight) + 141);
+    background-color: var(--almostWhite);
+    transition: height 1500ms;
+    width: 600px;
+    position: relative;
+    top: 100px;
+}
+.cvFrameInner {
+    width: 100%;
+    overflow: hidden;
+    max-height: var(--cvDefaultHeight);
+    transition: max-height 400ms;
+}
+
+.cvSkillRecord {
+    display: flex;
+    flex-direction: row;
+}
+.cvSkillRecordName {
+    width: 70%;
+}
+.cvSkillRecordVal {
+    display: flex;
+    overflow-wrap: anywhere;
+    max-width: 50%;
+    flex-wrap: wrap;
+    gap: 3px;
 }
