@@ -6,8 +6,9 @@
         yarn install
         npm start
 
-    requires mongoDB running at 127.0.0.1:27017/ (see settings.ts)
-
+    requires mongoDB running at 127.0.0.1:27017/ with 'xpart' db and collection 'users'
+    (see settings.ts)  
+    
     dependencies:
 
         npm     v10.7.0^
