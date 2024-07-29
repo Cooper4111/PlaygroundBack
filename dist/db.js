@@ -47,7 +47,7 @@ class DBController {
         return this._instance || (this._instance = new this());
     }
     connect() {
-        return __awaiter(this, arguments, void 0, function* (URL = settings_1.SETTINGS.DFLT_MONGO_URL, DBname = settings_1.SETTINGS.DFLT_MONGO_DB, collectionName = settings_1.SETTINGS.DFLT_MONGO_COLL) {
+        return __awaiter(this, arguments, void 0, function* (URL = settings_1.SETTINGS.DFLT_MONGO_URL, DBname = settings_1.SETTINGS.DFLT_MONGO_DB, collectionName = settings_1.SETTINGS.DFLT_MONGO_COLLECTION) {
             this.mongoClient = new mongodb_1.MongoClient(URL);
             this.userCollection = this.mongoClient.db(DBname).collection(collectionName);
         });

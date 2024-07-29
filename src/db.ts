@@ -15,6 +15,11 @@ export class DBController
     private constructor(){
         console.log('Creating new DB instance...');
         this.connect();
+        process.on("SIGINT", async() => {
+            await this.mongoClient.close();
+            console.log("Приложение завершило работу");
+            process.exit();
+        });
     }
 
     public static get instance(){
@@ -40,7 +45,6 @@ export class DBController
             return { ok: 0, error: { code: ErrCode.defaultDBerr, desc: `Error listing users`, meta: e } };
         }
     }
-
     async getUser(email : string) : Promise<opResult<any>> {
         try {
             const res = await this.userCollection.find({ 'email' : email }).toArray();
@@ -51,7 +55,6 @@ export class DBController
             return { ok: 0, error: { code: ErrCode.defaultDBerr, desc: `Error getting user '${email}' from DB.`, meta: e } };
         }
     }
-
     async createUser(user : any) : Promise<opResult<any>> {
         // does user exists? Yes. Here.
         // is data correct? Nope. Outside.
@@ -79,9 +82,6 @@ export class DBController
             return { ok: 0, error: { desc: `Error updating user: ${user.email}`, meta: e } };
         }
     }
-
-    async deleteUser(email : string) {}
-
     async authUser(email : string, password : string) : Promise<opResult<any>> {
         const userRes = await this.getUser(email);
         console.log("userRes:");
@@ -99,4 +99,5 @@ export class DBController
                 })
             .catch( err => { return { ok: 0, error: { desc: 'bcrypt compare() error', meta: err } } });
     }
+    async deleteUser(email : string) {} // TODO
 }

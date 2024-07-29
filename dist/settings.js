@@ -18,6 +18,6 @@ exports.SETTINGS = {
     PATH_TO_MEDIA: './frontend/media/img/avatar/',
     DFLT_MONGO_URL: 'mongodb://127.0.0.1:27017/',
     DFLT_MONGO_DB: 'xpart',
-    DFLT_MONGO_COLL: 'users'
+    DFLT_MONGO_COLLECTION: 'users'
 };
 //# sourceMappingURL=settings.js.map

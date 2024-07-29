@@ -1,7 +1,5 @@
 
 import express, { json } from 'express';
-import { MongoClient } from 'mongodb';
-import * as path from 'path';
 import { SETTINGS } from './settings';
 import { initAPIendpoints, initUIendpoints } from './endpoints';
 
@@ -15,8 +13,3 @@ async function init(){
 }
 init();
 
-// process.on("SIGINT", async() => {
-//     await mongoClient.close();
-//     console.log("Приложение завершило работу");
-//     process.exit();
-// });
