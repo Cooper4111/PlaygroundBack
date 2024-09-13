@@ -42,6 +42,11 @@ class DBController {
     constructor() {
         console.log('Creating new DB instance...');
         this.connect();
+        process.on("SIGINT", () => __awaiter(this, void 0, void 0, function* () {
+            yield this.mongoClient.close();
+            console.log("Приложение завершило работу");
+            process.exit();
+        }));
     }
     static get instance() {
         return this._instance || (this._instance = new this());
@@ -111,9 +116,6 @@ class DBController {
             }
         });
     }
-    deleteUser(email) {
-        return __awaiter(this, void 0, void 0, function* () { });
-    }
     authUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const userRes = yield this.getUser(email);
@@ -133,6 +135,9 @@ class DBController {
                 .catch(err => { return { ok: 0, error: { desc: 'bcrypt compare() error', meta: err } }; });
         });
     }
+    deleteUser(email) {
+        return __awaiter(this, void 0, void 0, function* () { });
+    } // TODO
 }
 exports.DBController = DBController;
 //# sourceMappingURL=db.js.map

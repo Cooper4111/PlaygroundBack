@@ -25,10 +25,26 @@ function init() {
         UIapp.listen(3000, () => { console.log(`UI  is listening @ 127.0.0.1:${settings_1.SETTINGS.UI_PORT}`); });
     });
 }
-init();
-// process.on("SIGINT", async() => {
-//     await mongoClient.close();
-//     console.log("Приложение завершило работу");
-//     process.exit();
-// });
+//init();
+function playground() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const array = [3, 5, -4, 8, 11, 1, -1, 6];
+        const targetSum = 10;
+        var res = proc(array, targetSum);
+        console.log(res);
+    });
+}
+playground();
+function proc(arr, targetSum) {
+    var delta;
+    var nums = {};
+    for (const el of arr) {
+        delta = targetSum - el;
+        if (delta in nums)
+            return [el, delta];
+        else
+            nums[el] = true;
+    }
+    return [];
+}
 //# sourceMappingURL=app.js.map
